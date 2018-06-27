@@ -732,8 +732,13 @@
 						"string",
 						"null"
 					],
-					"description": "Command to execute or full path to folder and executable to start the Mongo shell, needed by some Mongo scrapbook commands. If empty, will search in the system path for 'mongo'.",
+					"description": "Full path to folder and executable to start the Mongo shell, needed by some Mongo scrapbook commands. If empty, will search in the system path for 'mongo'.",
 					"default": null
+				},
+				"mongo.shell.args": {
+					"type": "string",
+					"description": "Arguments to pass when starting the Mongo shell.",
+					"default": ""
 				},
 				"mongo.shell.timeout": {
 					"type": "number",
