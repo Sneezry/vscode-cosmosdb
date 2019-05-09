@@ -17,13 +17,12 @@ type CommandResult = {
 
 // This is used at the end of each command we send to the console. When we get this string back,
 // we know we've reached the end of that command's result.
-const endOfDataBaseSentinel: string = '$EOD$';
+const endOfDataSentinelBase: string = '$EOD$';
 
 const mongoShowMoreMessage: string = 'Type "it" for more';
 const prematureExitMessage: string = `The Mongo console exited prematurely. Check the output window for possible additional data, and check your mongo.shell.path and mongo.shell.args settings.`;
 
 export class Shell {
-
 	private _executionId: number = 0;
 	private _stdoutData: string = "";
 	private _stderrData: string = "";
@@ -65,7 +64,7 @@ export class Shell {
 		// Monitor STDOUT
 		this._mongoShell.stdout.on('data', (chunk: Buffer) => {
 			let data: string = chunk.toString();
-			const endOfDataSentinel = `${endOfDataBaseSentinel}${this._executionId}${os.EOL}`;
+			const endOfDataSentinel = `${endOfDataSentinelBase}${this._executionId}${os.EOL}`;
 			if (data.endsWith(endOfDataSentinel)) {
 				const result: string = this._stdoutData + data.substring(0, data.length - endOfDataSentinel.length);
 				this.fireResult(result);
@@ -118,7 +117,7 @@ export class Shell {
 
 			// Mark end of result by sending the sentinel wrapped in quotes so the console will spit
 			// it back out as a string value
-			this._mongoShell.stdin.write(`"${endOfDataBaseSentinel}${executionId}"`, 'utf8');
+			this._mongoShell.stdin.write(`"${endOfDataSentinelBase}${executionId}"`, 'utf8');
 			this._mongoShell.stdin.write(os.EOL);
 		} catch (error) {
 			// Generally if writing to the process' stdin fails it has already exited
